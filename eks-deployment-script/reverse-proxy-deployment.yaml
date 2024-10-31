@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: 24800/udagram-reverseproxy:v3
+        image: 24800/reverseproxy:latest
         imagePullPolicy: Always          
         resources:
           requests:
