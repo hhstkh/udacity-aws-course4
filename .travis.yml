@@ -30,8 +30,6 @@ script:
   - docker build -t reverseproxy ./udagram-reverseproxy
   - docker tag reverseproxy $DOCKER_USERNAME/reverseproxy:latest
 
-  # Tag the Docker image with the latest tag
-  - docker tag udagram-api-feed 24800/udagram-api-feed:v7
 
 # Steps to run after a successful build
 after_success:
