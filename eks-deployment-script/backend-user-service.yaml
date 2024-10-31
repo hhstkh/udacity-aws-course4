@@ -12,5 +12,5 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: backend-user
+    service: backend-user
   type: ClusterIP

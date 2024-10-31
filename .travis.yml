@@ -1,0 +1,42 @@
+# Specify the programming language (this can be generic for Docker builds)
+language: generic
+
+# Use Docker in the Travis environment
+services:
+  - docker
+
+# Environment variables for Dockerhub (These are pulled from the Travis environment variables set in the repository settings)
+env:
+  global:
+    - DOCKER_USERNAME=$DOCKER_USERNAME
+    - DOCKER_PASSWORD=$DOCKER_PASSWORD
+
+# Steps to execute during the build process
+before_script:
+  # Log in to Dockerhub using the credentials stored in Travis environment variables
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+script:
+  # Build the Docker image
+  - docker build -t udagram-api-feed ./udagram-api-feed
+  - docker tag udagram-api-feed $DOCKER_USERNAME/udagram-api-feed:latest
+
+  - docker build -t udagram-api-user ./udagram-api-user
+  - docker tag udagram-api-user $DOCKER_USERNAME/udagram-api-user:latest
+
+  - docker build -t udagram-frontend ./udagram-frontend
+  - docker tag udagram-frontend $DOCKER_USERNAME/udagram-frontend:latest
+
+  - docker build -t reverseproxy ./udagram-reverseproxy
+  - docker tag reverseproxy $DOCKER_USERNAME/reverseproxy:latest
+
+  # Tag the Docker image with the latest tag
+  - docker tag udagram-api-feed 24800/udagram-api-feed:v7
+
+# Steps to run after a successful build
+after_success:
+  # Push the image to Dockerhub
+  - docker push $DOCKER_USERNAME/udagram-api-feed
+  - docker push $DOCKER_USERNAME/udagram-api-user
+  - docker push $DOCKER_USERNAME/udagram-frontend
+  - docker push $DOCKER_USERNAME/reverseproxy
